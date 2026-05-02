@@ -17,7 +17,9 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
-// Silent-timeout before the ESP32 init sequence begins (same window as Bluetooth)
+// Time to wait for the UART channel to go idle before starting the AT-command
+// sequence. If any data arrives within this window, the setup is cancelled (the
+// channel is still in use by TunerStudio traffic).
 #define ESP32_WIFI_SILENT_TIMEOUT TIME_MS2I(3000)
 
 /**

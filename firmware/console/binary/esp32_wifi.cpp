@@ -40,7 +40,12 @@ static const int esp32Timeout = TIME_MS2I(2500);
 
 static volatile bool esp32SetupIsRequested = false;
 
-// Stored credentials (set by esp32WifiStart(), consumed by runEsp32Commands())
+// Credentials written by esp32WifiStart() (console thread) and read by
+// runEsp32Commands() (TS thread via esp32WifiSoftwareDisconnectNotify).
+// Access is guarded by the fact that esp32SetupIsRequested is only set to
+// true after credentials are written, and the TS thread only reads them after
+// observing esp32SetupIsRequested == true. This mirrors the same pattern used
+// by bluetooth.cpp (see btSetupIsRequested there).
 static char esp32Ssid[WIFI_SSID_SIZE + 1];
 static char esp32Password[WIFI_PASSWORD_SIZE + 1];
 
@@ -153,7 +158,6 @@ static bool runEsp32Commands(SerialTsChannelBase *tsChannel) {
 	// Step 3 – configure SoftAP (channel 1, WPA2)
 	// AT+CWSAP="ssid","password",channel,encryption
 	//   encryption: 0=open, 2=WPA, 3=WPA2, 4=WPA/WPA2
-	int ssidLen = strlen(esp32Ssid);
 	int pwdLen = strlen(esp32Password);
 	bool openNetwork = (pwdLen == 0);
 
@@ -163,7 +167,6 @@ static bool runEsp32Commands(SerialTsChannelBase *tsChannel) {
 		chsnprintf(tmp, sizeof(tmp), "AT+CWSAP=\"%s\",\"%s\",1,3\r\n",
 		           esp32Ssid, esp32Password);
 	}
-	(void)ssidLen; // used implicitly via esp32Ssid in chsnprintf
 	esp32Write(tsChannel, tmp);
 	if (esp32WaitOk(tsChannel) != 0) {
 		efiPrintf("ESP32: CWSAP failed");
