@@ -163,6 +163,15 @@
 #endif /* EFI_BLUETOOTH_SETUP */
 
 /**
+ * ESP32 wireless bridge (UART-TCP proxy) setup support.
+ * When enabled, the firmware can configure an ESP32 module over UART using AT commands
+ * to act as a WiFi bridge for TunerStudio connectivity.
+ */
+#ifndef EFI_ESP32_WIFI
+#define EFI_ESP32_WIFI FALSE
+#endif /* EFI_ESP32_WIFI */
+
+/**
  * TunerStudio debug output
  */
 #define EFI_TUNER_STUDIO_VERBOSE TRUE

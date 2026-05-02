@@ -137,6 +137,7 @@
 #include "mass_storage_init.h"
 #include "trigger_emulator_algo.h"
 #include "rusefi_lua.h"
+#include "esp32_wifi.h"
 
 #include <setjmp.h>
 #include "extra_flash_pages.h"
@@ -276,6 +277,12 @@ void initEfiWithConfig() {
 
 #if EFI_WIFI
 	startWifiConsole();
+#endif
+
+#if EFI_ESP32_WIFI
+	if (engineConfiguration->wifiEnabled) {
+		esp32WifiStart(engineConfiguration->wifiSsid, engineConfiguration->wifiPassword);
+	}
 #endif
 
 	// Config could be completely bogus - don't start anything else!

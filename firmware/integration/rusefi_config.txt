@@ -246,6 +246,9 @@ struct_no_prefix engine_configuration_s
 
 #define VEHICLE_INFO_SIZE 32
 
+#define WIFI_SSID_SIZE 32
+#define WIFI_PASSWORD_SIZE 64
+
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 
@@ -1021,6 +1024,8 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
+	custom wifi_ssid_t @@WIFI_SSID_SIZE@@ string, ASCII, @OFFSET@, @@WIFI_SSID_SIZE@@
+	custom wifi_password_t @@WIFI_PASSWORD_SIZE@@ string, ASCII, @OFFSET@, @@WIFI_PASSWORD_SIZE@@
 
 	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	bit useInjectorFlowLinearizationTable,"yes","no"
@@ -1790,7 +1795,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
 	bit nitrousControlEnabled,"enabled","disabled"
 	bit vvlControlEnabled,"enabled","disabled"
-	bit unusedBit_Fancy3
+	bit wifiEnabled,"enabled","disabled";Auto-initialize ESP32 WiFi bridge on startup
 	bit unusedBit_Fancy4
 	bit unusedBit_Fancy5
 	bit unusedBit_Fancy6
@@ -1923,6 +1928,9 @@ end_struct
     rotational_idle_s rotationalIdleController;
 
 ! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
+
+	wifi_ssid_t wifiSsid;ESP32 WiFi bridge: SSID or Access Point name (max 32 chars)
+	wifi_password_t wifiPassword;ESP32 WiFi bridge: WiFi password (max 64 chars)
 
 ! end of engine_configuration_s
 end_struct
