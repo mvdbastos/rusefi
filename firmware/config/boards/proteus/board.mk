@@ -62,6 +62,9 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   endif
   DDEFS += -DEFI_LUA_LOOKUP=$(EFI_LUA_LOOKUP)
 
+	# Enable ESP32 WiFi bridge support on Proteus F7 (secondary UART channel)
+	DDEFS += -DEFI_ESP32_WIFI=TRUE
+
 	# note #define EFI_EMBED_INI_MSD FALSE in F7 features
 	ifeq ($(DEBUG_LEVEL_OPT),)
 		DEBUG_LEVEL_OPT = -Os -ggdb -g

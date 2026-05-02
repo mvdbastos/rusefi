@@ -1933,6 +1933,9 @@ float getConfigValueByHash(const int hash) {
 // vvlControlEnabled
 		case -708922423:
 			return engineConfiguration->vvlControlEnabled;
+// wifiEnabled
+		case 1221669503:
+			return engineConfiguration->wifiEnabled;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -5354,6 +5357,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -708922423:
 	{
 		engineConfiguration->vvlControlEnabled = (int)value;
+		return 1;
+	}
+		case 1221669503:
+	{
+		engineConfiguration->wifiEnabled = (int)value;
 		return 1;
 	}
 		case -1760115393:

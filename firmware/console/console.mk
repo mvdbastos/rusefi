@@ -9,6 +9,7 @@ CONSOLE_SRC_CPP = $(CONSOLE_COMMON_SRC_CPP) \
 	$(PROJECT_DIR)/console/connector_uart_dma.cpp \
 	$(PROJECT_DIR)/console/binary_mlg_log/usb_console.cpp \
 	$(PROJECT_DIR)/console/wifi_console.cpp \
+	$(PROJECT_DIR)/console/binary/esp32_wifi.cpp \
 
 
 CONSOLE_INC=\

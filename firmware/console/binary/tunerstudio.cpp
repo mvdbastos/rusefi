@@ -89,6 +89,7 @@
 #include "malfunction_central.h"
 #include "console_io.h"
 #include "bluetooth.h"
+#include "esp32_wifi.h"
 #include "tunerstudio_io.h"
 #include "trigger_scope.h"
 #include "electronic_throttle.h"
@@ -663,6 +664,12 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 			bluetoothSoftwareDisconnectNotify(getBluetoothChannel());
 		}
 #endif /* EFI_BLUETOOTH_SETUP */
+#if EFI_ESP32_WIFI
+		if (tsChannel == getBluetoothChannel()) {
+			// same channel used for ESP32 bridge; trigger AT-command init if requested
+			esp32WifiSoftwareDisconnectNotify(getBluetoothChannel());
+		}
+#endif /* EFI_ESP32_WIFI */
 		tsChannel->in_sync = false;
 		return -1;
 	}
@@ -1155,6 +1162,16 @@ void startTunerStudioConnectivity() {
 		bluetoothStart(BLUETOOTH_JDY_31, baudRate, name, pinCode);
 	});
 #endif /* EFI_BLUETOOTH_SETUP */
+
+#if EFI_ESP32_WIFI
+	// Usage:   "esp32_wifi <ssid> <password>"
+	// Example: "esp32_wifi rusEFI mysecretpass"
+	// Configures an ESP32 module on the secondary UART as a WiFi bridge for TunerStudio.
+	// The ESP32 must run Espressif AT firmware (or compatible).
+	addConsoleActionSS("esp32_wifi", [](const char *ssid, const char *password) {
+		esp32WifiStart(ssid, password);
+	});
+#endif /* EFI_ESP32_WIFI */
 }
 
 #endif // EFI_TUNER_STUDIO
